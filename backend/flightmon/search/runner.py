@@ -1,0 +1,95 @@
+"""Orchestrates a full run: searches → provider → filters → DB → notify."""
+from __future__ import annotations
+
+import logging
+
+from ..models import FlightResult, Search
+from ..notifier.telegram import TelegramNotifier
+from ..providers.base import FlightProvider, ProviderOffer
+from ..storage.supabase import SupabaseStore
+from .expander import apply_filters, plan_calls
+
+log = logging.getLogger(__name__)
+
+
+def _execute_call(provider: FlightProvider, call) -> list[ProviderOffer]:
+    if call.kind == "inspiration":
+        return provider.inspiration(
+            origin=call.origin,
+            departure_window=call.departure_window,
+            duration_days=call.duration_days,
+            max_price=call.max_price,
+        )
+    return provider.cheapest_dates(
+        origin=call.origin,
+        destination=call.destination,  # type: ignore[arg-type]
+        departure_window=call.departure_window,
+        duration_days=call.duration_days,
+        max_price=call.max_price,
+    )
+
+
+def _to_result(search_id: str, o: ProviderOffer) -> FlightResult:
+    return FlightResult(
+        search_id=search_id,
+        origin_iata=o.origin_iata,
+        destination_iata=o.destination_iata,
+        departure_date=o.departure_date,
+        return_date=o.return_date,
+        price_eur=o.price_eur,
+        airline=o.airline,
+        stops=o.stops,
+        duration_minutes=o.duration_minutes,
+        deep_link=o.deep_link,
+        raw_offer=o.raw,
+    )
+
+
+def run_search(
+    search: Search,
+    provider: FlightProvider,
+    store: SupabaseStore,
+    notifier: TelegramNotifier | None,
+) -> int:
+    """Execute one search end-to-end. Returns the number of results stored."""
+    log.info("Running search %s (%s)", search.id, search.name)
+    offers: list[ProviderOffer] = []
+    for call in plan_calls(search):
+        try:
+            offers.extend(_execute_call(provider, call))
+        except Exception as exc:  # noqa: BLE001 — never fail the whole run for one call
+            log.exception("Provider call failed for %s: %s", search.id, exc)
+
+    results = [_to_result(search.id, o) for o in apply_filters(offers, search)]
+    store.insert_results(results)
+
+    if notifier and results:
+        previous_min = store.lowest_price(search.id)
+        # `previous_min` already reflects the freshly inserted rows; recompute
+        # by taking the min excluding them is overkill — instead trigger the
+        # alert based on the absolute thresholds.
+        threshold = search.notify_on.price_under
+        for r in results:
+            reasons = []
+            if threshold is not None and r.price_eur <= threshold:
+                reasons.append(f"≤ {threshold:.0f} €")
+            if search.notify_on.new_lowest and previous_min is not None and r.price_eur <= previous_min:
+                reasons.append("nuevo mínimo")
+            if reasons:
+                notifier.maybe_notify(search, r, ", ".join(reasons))
+
+    return len(results)
+
+
+def run_all(
+    provider: FlightProvider,
+    store: SupabaseStore,
+    notifier: TelegramNotifier | None,
+) -> int:
+    total = 0
+    for s in store.list_active_searches():
+        try:
+            total += run_search(s, provider, store, notifier)
+        except Exception:
+            log.exception("Search %s failed", s.id)
+    return total
