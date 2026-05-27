@@ -2,7 +2,8 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 
 import PriceHistoryChart, { type PricePoint } from "@/components/PriceHistoryChart";
-import { serverClient, type FlightResult, type Search } from "@/lib/supabase";
+import { getSearchAndResults } from "@/lib/data";
+import type { FlightResult, Search } from "@/lib/supabase";
 import { parseDateRange, parseIntRange } from "@/lib/ranges";
 import { deleteSearch, toggleActive } from "../actions";
 
@@ -10,33 +11,24 @@ export const dynamic = "force-dynamic";
 
 export default async function SearchDetail({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
-  const supabase = serverClient();
-  const { data: search } = await supabase.from("searches").select("*").eq("id", id).maybeSingle();
-  if (!search) notFound();
+  const loaded = await getSearchAndResults(id);
+  if (!loaded) notFound();
+  const { search, results } = loaded;
 
-  const { data: results } = await supabase
-    .from("flight_results")
-    .select("*")
-    .eq("search_id", id)
-    .order("captured_at", { ascending: false })
-    .limit(200);
-
-  const history = aggregateMinPerDay((results as FlightResult[]) ?? []);
-  const recent = ((results as FlightResult[]) ?? []).slice(0, 20);
+  const history = aggregateMinPerDay(results);
+  const recent = results.slice(0, 20);
 
   return (
     <div className="space-y-6">
       <header className="flex items-start justify-between">
         <div>
-          <h1 className="text-2xl font-semibold">{(search as Search).name}</h1>
-          <p className="text-sm text-neutral-600">
-            {summary(search as Search)}
-          </p>
+          <h1 className="text-2xl font-semibold">{search.name}</h1>
+          <p className="text-sm text-neutral-600">{summary(search)}</p>
         </div>
         <div className="flex gap-2">
-          <form action={async () => { "use server"; await toggleActive(id, !(search as Search).active); }}>
+          <form action={async () => { "use server"; await toggleActive(id, !search.active); }}>
             <button className="rounded border px-3 py-1.5 text-sm hover:bg-neutral-100">
-              {(search as Search).active ? "Pausar" : "Reactivar"}
+              {search.active ? "Pausar" : "Reactivar"}
             </button>
           </form>
           <form action={async () => { "use server"; await deleteSearch(id); }}>

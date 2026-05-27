@@ -42,7 +42,14 @@ function num(v: unknown): number | undefined {
   return typeof v === "number" && !Number.isNaN(v) ? v : undefined;
 }
 
+const DEMO = process.env.DEMO_MODE === "1";
+
 export async function createSearch(formData: FormData) {
+  if (DEMO) {
+    // In demo mode just bounce back to the home page — no Supabase available.
+    revalidatePath("/");
+    redirect("/");
+  }
   const raw: Record<string, FormDataEntryValue> = {};
   formData.forEach((v, k) => {
     raw[k] = v;
@@ -103,6 +110,10 @@ export async function createSearch(formData: FormData) {
 }
 
 export async function deleteSearch(id: string) {
+  if (DEMO) {
+    revalidatePath("/");
+    redirect("/");
+  }
   const supabase = serverClient();
   const { error } = await supabase.from("searches").delete().eq("id", id);
   if (error) throw new Error(error.message);
@@ -111,6 +122,10 @@ export async function deleteSearch(id: string) {
 }
 
 export async function toggleActive(id: string, active: boolean) {
+  if (DEMO) {
+    revalidatePath(`/searches/${id}`);
+    return;
+  }
   const supabase = serverClient();
   const { error } = await supabase.from("searches").update({ active }).eq("id", id);
   if (error) throw new Error(error.message);

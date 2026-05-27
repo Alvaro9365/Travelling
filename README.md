@@ -50,6 +50,20 @@ En Repo → Settings → Secrets and variables → Actions añadir:
 Importar el repo, root directory `frontend/`. Variables de entorno:
 `SUPABASE_URL`, `SUPABASE_SERVICE_KEY`. Deploy.
 
+## Vista previa sin backend (modo demo)
+
+Para revisar el front sin Supabase ni Amadeus, arranca el dev server con
+`DEMO_MODE=1` y se carga con tres búsquedas de ejemplo y ~30 ofertas:
+
+```bash
+cd frontend
+npm install
+DEMO_MODE=1 npm run dev
+# http://localhost:3000
+```
+
+En este modo las server actions (crear/borrar/pausar) son no-op.
+
 ## Desarrollo local
 
 ```bash
