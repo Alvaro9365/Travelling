@@ -61,19 +61,23 @@ def run_search(
             log.exception("Provider call failed for %s: %s", search.id, exc)
 
     results = [_to_result(search.id, o) for o in apply_filters(offers, search)]
+
+    # Snapshot the previous min BEFORE inserting; otherwise the cheapest row
+    # of the current batch becomes its own "previous" and `new_lowest` fires
+    # on every run that returns results.
+    previous_min = store.lowest_price(search.id) if notifier and results else None
     store.insert_results(results)
 
     if notifier and results:
-        previous_min = store.lowest_price(search.id)
-        # `previous_min` already reflects the freshly inserted rows; recompute
-        # by taking the min excluding them is overkill — instead trigger the
-        # alert based on the absolute thresholds.
         threshold = search.notify_on.price_under
         for r in results:
             reasons = []
             if threshold is not None and r.price_eur <= threshold:
                 reasons.append(f"≤ {threshold:.0f} €")
-            if search.notify_on.new_lowest and previous_min is not None and r.price_eur <= previous_min:
+            if (
+                search.notify_on.new_lowest
+                and (previous_min is None or r.price_eur < previous_min)
+            ):
                 reasons.append("nuevo mínimo")
             if reasons:
                 notifier.maybe_notify(search, r, ", ".join(reasons))

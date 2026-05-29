@@ -85,14 +85,7 @@ class SupabaseStore:
     def insert_results(self, results: list[FlightResult]) -> None:
         if not results:
             return
-        payload = [
-            {
-                **r.model_dump(mode="json", exclude_none=True),
-                "departure_date": r.departure_date.isoformat(),
-                "return_date": r.return_date.isoformat() if r.return_date else None,
-            }
-            for r in results
-        ]
+        payload = [r.model_dump(mode="json", exclude_none=True) for r in results]
         self._client.table("flight_results").insert(payload).execute()
 
     def lowest_price(self, search_id: str) -> float | None:

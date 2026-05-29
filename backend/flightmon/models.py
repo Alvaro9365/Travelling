@@ -8,7 +8,7 @@ from __future__ import annotations
 from datetime import date
 from typing import Literal
 
-from pydantic import BaseModel, Field, field_validator
+from pydantic import BaseModel, Field, field_validator, model_validator
 
 
 # --- destinations ----------------------------------------------------------
@@ -88,11 +88,17 @@ class Search(BaseModel):
     origin_iata: str = Field(min_length=3, max_length=3)
     trip_type: Literal["round_trip", "one_way"] = "round_trip"
     outbound_window: DateWindow
-    duration_days: DurationRange | None = None  # required iff round_trip
+    duration_days: DurationRange | None = None
     destinations: Destinations
     price_range: PriceRange | None = None
     filters: Filters = Field(default_factory=Filters)
     notify_on: NotifyOn = Field(default_factory=NotifyOn)
+
+    @model_validator(mode="after")
+    def _require_duration_for_round_trip(self) -> "Search":
+        if self.trip_type == "round_trip" and self.duration_days is None:
+            raise ValueError("duration_days is required for round_trip searches")
+        return self
 
 
 # --- result ----------------------------------------------------------------

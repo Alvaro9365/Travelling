@@ -17,30 +17,37 @@ const iatas = z
       .filter((x) => x.length === 3),
   );
 
+// Empty form fields arrive as "" — coerce.number would silently turn that
+// into 0, so an empty `max_stops` field would mean "direct flights only".
+// Treat blanks as `undefined` before coercing.
+const optionalNumber = (extra?: (n: z.ZodNumber) => z.ZodNumber) =>
+  z.preprocess(
+    (v) => (v === "" || v === null || v === undefined ? undefined : v),
+    extra ? extra(z.coerce.number()).optional() : z.coerce.number().optional(),
+  );
+
+const checkbox = z.preprocess((v) => v === "on" || v === true, z.boolean()).optional();
+
 const Form = z.object({
   name: z.string().min(1),
-  active: z.preprocess((v) => v === "on" || v === true, z.boolean()).optional(),
+  active: checkbox,
   origin_iata: z.string().length(3).transform((s) => s.toUpperCase()),
   trip_type: z.enum(["round_trip", "one_way"]),
   outbound_start: z.string().min(10),
   outbound_end: z.string().min(10),
-  duration_min: z.coerce.number().int().min(1).optional(),
-  duration_max: z.coerce.number().int().min(1).optional(),
+  duration_min: optionalNumber((n) => n.int().min(1)),
+  duration_max: optionalNumber((n) => n.int().min(1)),
   dest_mode: z.enum(["include", "exclude", "any"]),
   dest_iatas: iatas,
   dest_region: z.string().optional(),
-  price_min: z.coerce.number().min(0).optional().or(z.literal("")),
-  price_max: z.coerce.number().min(0).optional().or(z.literal("")),
-  max_stops: z.coerce.number().int().min(0).optional().or(z.literal("")),
-  max_duration_minutes: z.coerce.number().int().min(0).optional().or(z.literal("")),
+  price_min: optionalNumber((n) => n.min(0)),
+  price_max: optionalNumber((n) => n.min(0)),
+  max_stops: optionalNumber((n) => n.int().min(0)),
+  max_duration_minutes: optionalNumber((n) => n.int().min(0)),
   excluded_airlines: iatas,
-  notify_price_under: z.coerce.number().min(0).optional().or(z.literal("")),
-  notify_new_lowest: z.preprocess((v) => v === "on" || v === true, z.boolean()).optional(),
+  notify_price_under: optionalNumber((n) => n.min(0)),
+  notify_new_lowest: checkbox,
 });
-
-function num(v: unknown): number | undefined {
-  return typeof v === "number" && !Number.isNaN(v) ? v : undefined;
-}
 
 const DEMO = process.env.DEMO_MODE === "1";
 
@@ -63,21 +70,19 @@ export async function createSearch(formData: FormData) {
       ? { mode: "include" as const, iatas: data.dest_iatas }
       : { mode: "exclude" as const, iatas: data.dest_iatas };
 
-  const priceMin = num(data.price_min);
-  const priceMax = num(data.price_max);
   const price_range =
-    priceMin === undefined && priceMax === undefined
+    data.price_min === undefined && data.price_max === undefined
       ? null
-      : { min: priceMin, max: priceMax, currency: "EUR" };
+      : { min: data.price_min, max: data.price_max, currency: "EUR" };
 
   const filters = {
-    max_stops: num(data.max_stops),
-    max_duration_minutes: num(data.max_duration_minutes),
+    max_stops: data.max_stops,
+    max_duration_minutes: data.max_duration_minutes,
     excluded_airlines: data.excluded_airlines,
   };
 
   const notify_on = {
-    price_under: num(data.notify_price_under),
+    price_under: data.notify_price_under,
     new_lowest: !!data.notify_new_lowest,
   };
 
