@@ -3,13 +3,16 @@ from __future__ import annotations
 
 import argparse
 import logging
+import os
 import sys
+from datetime import datetime
 
 from .config import Config, ConfigError
 from .notifier.telegram import TelegramNotifier
 from .providers.amadeus import AmadeusProvider
 from .search.runner import run_all, run_search
 from .storage.supabase import SupabaseStore
+from .summary import RunSummary, SearchRunSummary, to_markdown, to_oneline
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -41,12 +44,33 @@ def main(argv: list[str] | None = None) -> int:
             if not search:
                 print(f"No such search: {args.search_id}", file=sys.stderr)
                 return 1
-            count = run_search(search, provider, store, notifier)
+            started = datetime.utcnow()
+            single = run_search(search, provider, store, notifier)
+            summary = RunSummary(started_at=started, finished_at=datetime.utcnow(), searches=[single])
         else:
-            count = run_all(provider, store, notifier)
-        print(f"Stored {count} results")
+            summary = run_all(provider, store, notifier)
+
+        _emit_summary(summary)
+        # Non-zero exit when every search crashed, so the workflow turns red.
+        if summary.searches and len(summary.failed_searches) == len(summary.searches):
+            return 1
     return 0
+
+
+def _emit_summary(summary: RunSummary) -> None:
+    print(to_oneline(summary))
+    step_summary = os.environ.get("GITHUB_STEP_SUMMARY")
+    if step_summary:
+        try:
+            with open(step_summary, "a", encoding="utf-8") as fh:
+                fh.write(to_markdown(summary))
+        except OSError as exc:
+            logging.getLogger(__name__).warning("Could not write GITHUB_STEP_SUMMARY: %s", exc)
 
 
 if __name__ == "__main__":
     raise SystemExit(main())
+
+
+# Re-export so existing imports keep working in tests that reach for the type.
+__all__ = ["main", "SearchRunSummary"]
