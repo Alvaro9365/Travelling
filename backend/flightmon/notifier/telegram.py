@@ -7,7 +7,7 @@ import logging
 import httpx
 
 from ..models import FlightResult, Search
-from ..storage.supabase import SupabaseStore
+from ..storage.jsonfile import JsonFileStore
 
 log = logging.getLogger(__name__)
 
@@ -35,7 +35,7 @@ def _format(search: Search, r: FlightResult, reason: str) -> str:
 
 
 class TelegramNotifier:
-    def __init__(self, bot_token: str, chat_id: str, store: SupabaseStore) -> None:
+    def __init__(self, bot_token: str, chat_id: str, store: JsonFileStore) -> None:
         self._token = bot_token
         self._chat_id = chat_id
         self._store = store
@@ -58,5 +58,5 @@ class TelegramNotifier:
         if resp.status_code >= 400:
             log.error("Telegram error %s: %s", resp.status_code, resp.text)
             return False
-        self._store.mark_notification(search.id, key)
+        self._store.mark_notification(key)
         return True

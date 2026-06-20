@@ -7,7 +7,7 @@ from datetime import datetime
 from ..models import FlightResult, Search
 from ..notifier.telegram import TelegramNotifier
 from ..providers.base import FlightProvider, ProviderOffer
-from ..storage.supabase import SupabaseStore
+from ..storage.jsonfile import JsonFileStore
 from ..summary import RunSummary, SearchRunSummary
 from .expander import apply_filters, plan_calls
 
@@ -50,7 +50,7 @@ def _to_result(search_id: str, o: ProviderOffer) -> FlightResult:
 def run_search(
     search: Search,
     provider: FlightProvider,
-    store: SupabaseStore,
+    store: JsonFileStore,
     notifier: TelegramNotifier | None,
 ) -> SearchRunSummary:
     """Execute one search end-to-end and return a structured summary."""
@@ -75,7 +75,7 @@ def run_search(
     # of the current batch becomes its own "previous" and `new_lowest` fires
     # on every run that returns results.
     previous_min = store.lowest_price(search.id) if notifier and results else None
-    store.insert_results(results)
+    store.insert_results(search.id, results)
 
     if notifier and results:
         threshold = search.notify_on.price_under
@@ -96,7 +96,7 @@ def run_search(
 
 def run_all(
     provider: FlightProvider,
-    store: SupabaseStore,
+    store: JsonFileStore,
     notifier: TelegramNotifier | None,
 ) -> RunSummary:
     run = RunSummary(started_at=datetime.utcnow())

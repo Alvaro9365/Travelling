@@ -1,0 +1,34 @@
+# Lista de búsquedas que el cron evalúa cada 2 h.
+# Edita este fichero, haz commit y push: la próxima ejecución del cron lo recoge.
+#
+# Modos de destino:
+#   any      → cualquier destino (Amadeus Flight Inspiration)
+#   include  → solo los IATAs listados
+#   exclude  → cualquiera menos los listados
+#
+# Cualquier campo opcional se puede omitir; los rangos pueden ser un único valor
+# (e.g. duration_days: {min: 7, max: 7} para duración fija).
+
+searches:
+  - id: ejemplo-verano-europa
+    name: Escapada verano Europa
+    active: true
+    origin_iata: MAD
+    trip_type: round_trip
+    outbound_window:
+      start: 2026-07-10
+      end: 2026-07-25
+    duration_days:
+      min: 5
+      max: 10
+    destinations:
+      mode: any
+      region: EUROPE
+    price_range:
+      max: 250
+    filters:
+      max_stops: 1
+      max_duration_minutes: 480
+    notify_on:
+      price_under: 180
+      new_lowest: true

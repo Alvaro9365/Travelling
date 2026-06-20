@@ -97,7 +97,7 @@ def test_run_all_isolates_search_crashes():
     s2 = _make_search(id="s2", name="s2")
     store = MagicMock()
     store.list_active_searches.return_value = [s1, s2]
-    store.insert_results.side_effect = [RuntimeError("db down"), None]
+    store.insert_results.side_effect = [RuntimeError("disk full"), None]
     store.lowest_price.return_value = None
     provider = _provider_with([
         ProviderOffer("MAD", "LIS", date(2026, 7, 12), date(2026, 7, 19), 150.0),

@@ -5,15 +5,13 @@ __pycache__/
 .pytest_cache/
 *.egg-info/
 
-# Node
-node_modules/
-.next/
-out/
+# Local preview
+_preview/
+_site/
 
 # Env
 .env
 .env.local
-.env*.local
 
 # OS
 .DS_Store

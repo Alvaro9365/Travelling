@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Flight Monitor</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="./style.css" />
+</head>
+<body>
+  <header>
+    <div class="container">
+      <div class="brand">
+        <span class="badge">✈</span>
+        <div>
+          <h1>Flight Monitor</h1>
+          <p id="generated-at">Cargando…</p>
+        </div>
+      </div>
+      <a id="repo-link" class="repo" target="_blank" rel="noreferrer">Editar búsquedas →</a>
+    </div>
+  </header>
+
+  <main class="container">
+    <section id="banner-slot"></section>
+
+    <section>
+      <div id="kpis" class="kpis"></div>
+    </section>
+
+    <section>
+      <div class="heading"><h2>Gangas detectadas</h2><span id="deals-count" class="count"></span></div>
+      <div id="deals" class="card"></div>
+    </section>
+
+    <section>
+      <div class="heading"><h2>Búsquedas activas</h2><span id="searches-count" class="count"></span></div>
+      <div id="searches"></div>
+    </section>
+
+    <section>
+      <div class="heading"><h2>Últimas ejecuciones</h2></div>
+      <div id="runs" class="card"></div>
+    </section>
+
+    <footer>
+      Datos generados por el cron de GitHub Actions cada 2 h. Editado por <code>data/searches.yaml</code>.
+    </footer>
+  </main>
+
+  <script src="./app.js"></script>
+</body>
+</html>
