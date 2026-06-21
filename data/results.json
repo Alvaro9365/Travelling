@@ -1,0 +1,57 @@
+{
+  "ejemplo-lisboa-paris-roma": {
+    "captured_at": "2026-06-21T08:26:51Z",
+    "offers": [
+      {
+        "origin_iata": "MAD",
+        "destination_iata": "LIS",
+        "departure_date": "2026-09-05",
+        "return_date": "2026-09-10",
+        "price_eur": 72.0,
+        "airline": "Tap Air Portugal",
+        "stops": 0,
+        "duration_minutes": 85
+      },
+      {
+        "origin_iata": "MAD",
+        "destination_iata": "LIS",
+        "departure_date": "2026-09-05",
+        "return_date": "2026-09-13",
+        "price_eur": 111.0,
+        "airline": "Tap Air Portugal",
+        "stops": 0,
+        "duration_minutes": 85
+      },
+      {
+        "origin_iata": "MAD",
+        "destination_iata": "LIS",
+        "departure_date": "2026-09-20",
+        "return_date": "2026-09-25",
+        "price_eur": 103.0,
+        "airline": "easyJet",
+        "stops": 0,
+        "duration_minutes": 85
+      },
+      {
+        "origin_iata": "MAD",
+        "destination_iata": "FCO",
+        "departure_date": "2026-09-20",
+        "return_date": "2026-09-25",
+        "price_eur": 121.0,
+        "airline": "Ryanair",
+        "stops": 0,
+        "duration_minutes": 145
+      },
+      {
+        "origin_iata": "MAD",
+        "destination_iata": "FCO",
+        "departure_date": "2026-09-20",
+        "return_date": "2026-09-28",
+        "price_eur": 137.0,
+        "airline": "Ryanair",
+        "stops": 0,
+        "duration_minutes": 145
+      }
+    ]
+  }
+}
