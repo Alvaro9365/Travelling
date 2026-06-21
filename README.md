@@ -1,10 +1,16 @@
 # Flight Monitor
 
-Automatización que consulta cada 2 h vuelos en **Google Flights** (vía la
-librería [`fast-flights`](https://github.com/AWeirdDev/flights), gratuita y
-sin credenciales) para un conjunto configurable de búsquedas y publica
-los resultados en un **dashboard estático en GitHub Pages** que se puede
+Automatización que consulta cada 2 h vuelos vía **Travelpayouts**
+(agregador del buscador Aviasales, gratuito tras registro como afiliado
+sin tarjeta) para un conjunto configurable de búsquedas y publica los
+resultados en un **dashboard estático en GitHub Pages** que se puede
 consultar en cualquier momento.
+
+> **Nota sobre la fuente de datos:** Travelpayouts sirve precios cacheados
+> de búsquedas reales que han hecho otros usuarios en Aviasales /
+> Jetradar en las últimas ~48 h. Cobertura excelente para rutas populares
+> (MAD-LIS, MAD-CDG, etc.) y patchier para rutas raras. El enlace de
+> reserva lleva a Aviasales, que confirma el precio en vivo al pinchar.
 
 Las alertas por Telegram (opcionales) siguen disponibles, pero el origen de
 verdad para consultar gangas y evolución de precios es el dashboard.
@@ -14,7 +20,7 @@ verdad para consultar gangas y evolución de precios es el dashboard.
 │ GitHub Actions cron (cada 2 h)                                      │
 │   └── python -m flightmon run                                       │
 │        ├── lee data/searches.yaml                                   │
-│        ├── consulta Google Flights (fast-flights, sin credenciales) │
+│        ├── consulta Travelpayouts /v1/prices/cheap                  │
 │        ├── escribe data/results.json + data/history/<id>.jsonl      │
 │        ├── construye data/dashboard.json                            │
 │        ├── (opcional) avisa por Telegram                            │
@@ -31,21 +37,29 @@ verdad para consultar gangas y evolución de precios es el dashboard.
 
 `Settings → Pages → Source → GitHub Actions`.
 
-### 2. Configurar secretos (opcionales)
+### 2. Crear cuenta Travelpayouts y obtener token
 
-`fast-flights` no necesita credenciales: el cron funciona sin tocar
-secretos. Si quieres que además te lleguen alertas a Telegram, añade en
+1. Regístrate (gratis, sin tarjeta) en https://www.travelpayouts.com/programs/100/.
+2. En tu panel, `Tools → Data Access API`, copia el **API Token**.
+3. (Opcional) Copia también tu **Marker** (ID de afiliado) — solo se usa
+   para que Aviasales atribuya las reservas que hagas tú; no afecta a la
+   funcionalidad.
+
+### 3. Configurar secretos en GitHub
+
 `Settings → Secrets and variables → Actions → New secret`:
 
-| Secreto | Cómo conseguirlo |
-|---|---|
-| `TELEGRAM_BOT_TOKEN` *(opcional)* | Bot creado con `@BotFather` |
-| `TELEGRAM_CHAT_ID` *(opcional)* | Tu chat ID via `@userinfobot` |
+| Secreto | Obligatorio | Cómo conseguirlo |
+|---|---|---|
+| `TRAVELPAYOUTS_TOKEN` | sí | Panel Travelpayouts → Tools → Data Access API |
+| `TRAVELPAYOUTS_MARKER` | no | Panel Travelpayouts → tu ID de afiliado |
+| `TELEGRAM_BOT_TOKEN` | no | Bot creado con `@BotFather` |
+| `TELEGRAM_CHAT_ID` | no | Tu chat ID via `@userinfobot` |
 
-Sin esas dos variables el cron sigue funcionando, solo se omiten las
-notificaciones — el dashboard es la fuente principal.
+Sin Telegram el cron sigue funcionando; el dashboard es la fuente
+principal de consulta.
 
-### 3. Editar `data/searches.yaml`
+### 4. Editar `data/searches.yaml`
 
 Es la única fuente de verdad de qué se monitoriza. Cualquier cambio se
 recoge en la siguiente ejecución del cron. Ejemplo mínimo:
@@ -65,22 +79,16 @@ searches:
 ```
 
 Modos de destino:
-- `include` → solo los IATAs listados (**recomendado** con fast-flights).
-- `exclude` → cualquiera menos los listados.
-- `any` → muestrea un pool curado de ~25 hubs europeos (LIS, CDG, FCO, AMS,
-  BER, LHR, DUB, OPO, MXP, BCN, VLC, AGP, PMI, ATH, VIE, PRG, BUD, CPH,
-  ARN, OSL, ZRH, BRU, MUC, HEL, NAP). Soporta `price_range.max` para
-  filtrar offers.
+- `include` → solo los IATAs listados.
+- `exclude` → cualquiera salvo los listados (consulta endpoint open-ended y filtra).
+- `any` → cualquier destino que aparezca en la cache de Aviasales para tu origen.
 
-Coste de llamadas:
-fast-flights hace 1 query a Google Flights por (destino × fecha muestreada
-× duración muestreada). Por defecto muestrea 2 fechas × 2 duraciones = 4
-queries por destino y run, con throttle de 1 s. Para `mode: include` con 3
-destinos = 12 queries/run ≈ 144/día (asumible). Para `mode: any` con el
-pool por defecto = ~100 queries/run ≈ 1200/día (margen ajustado: si Google
-te empieza a bloquear, baja la cadencia del cron o usa `include`).
+Llamadas por run:
+Travelpayouts agrupa los precios por mes, así que cada destino son
+~1 llamada/mes-de-ventana, lo cual es muy ligero (típicamente 1-3
+llamadas por búsqueda). No hay riesgo de rate-limit con cron cada 2 h.
 
-### 4. Lanzar el primer run
+### 5. Lanzar el primer run
 
 `Actions → flight-monitor → Run workflow`. Tras unos segundos:
 - Aparece `data/dashboard.json` en el repo.
@@ -93,8 +101,8 @@ cd backend
 uv sync --dev
 uv run pytest               # 40 tests
 
-# Smoke test contra Google Flights (sin credenciales):
-uv run python -m flightmon run
+# Smoke test contra Travelpayouts (necesita token):
+TRAVELPAYOUTS_TOKEN=xxxxx uv run python -m flightmon run
 
 # Servir el dashboard estático con los datos generados:
 python3 -m http.server -d dashboard 8000 &
@@ -123,16 +131,18 @@ Travelling/
 ## Proveedores alternativos
 
 `FlightProvider` (`backend/flightmon/providers/base.py`) es una interfaz
-abstracta. Hoy hay dos implementaciones disponibles:
+abstracta. Implementaciones disponibles:
 
-- `fastflights.py` — **default**, Google Flights, gratis.
-- `amadeus.py` — Amadeus Self-Service (necesita credenciales y, para
-  datos reales, suscripción de pago). Se queda en el repo como fallback
-  si Google rompe la API interna.
+- `travelpayouts.py` — **default**, Aviasales cache, gratis.
+- `amadeus.py` — Amadeus Self-Service (test gratis con datos sintéticos;
+  producción de pago con datos reales). Para usarlo modifica `cli.py`
+  para instanciar `AmadeusProvider` y añade secretos `AMADEUS_CLIENT_ID`,
+  `AMADEUS_CLIENT_SECRET`, `AMADEUS_HOSTNAME`.
 
-Para forzar Amadeus, modifica `cli.py` para instanciar `AmadeusProvider`
-en vez de `FastFlightsProvider` y añade los secretos `AMADEUS_CLIENT_ID`,
-`AMADEUS_CLIENT_SECRET`, `AMADEUS_HOSTNAME` (`test` o `production`).
+En el historial git puedes encontrar también una implementación
+`fastflights.py` (Google Flights via la librería `fast-flights`); se
+retiró porque Google dejó de pre-renderizar resultados en SSR y la
+librería sin JS-runtime devuelve `payload[3][0] is None` → 0 ofertas.
 
 ## Roadmap
 
