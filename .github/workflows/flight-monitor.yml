@@ -35,6 +35,12 @@ jobs:
         working-directory: backend
         run: uv sync --frozen
 
+      - name: Debug fetch (temporary diagnostic — remove once parser works)
+        if: github.event_name != 'push'
+        continue-on-error: true
+        working-directory: backend
+        run: uv run python -m flightmon debug-fetch MAD LIS 2026-09-05 --return-date 2026-09-10
+
       - name: Run flight monitor
         if: github.event_name != 'push'
         working-directory: backend

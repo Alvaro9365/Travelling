@@ -175,6 +175,7 @@ class FastFlightsProvider(FlightProvider):
             trip=trip_type,  # type: ignore[arg-type]
             passengers=Passengers(adults=1),
             currency=self.currency,
+            language="en-US",
         )
         try:
             result = get_flights(query)
