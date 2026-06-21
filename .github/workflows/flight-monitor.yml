@@ -39,12 +39,9 @@ jobs:
         if: github.event_name != 'push'
         working-directory: backend
         env:
-          AMADEUS_CLIENT_ID:     ${{ secrets.AMADEUS_CLIENT_ID }}
-          AMADEUS_CLIENT_SECRET: ${{ secrets.AMADEUS_CLIENT_SECRET }}
-          AMADEUS_HOSTNAME:      ${{ vars.AMADEUS_HOSTNAME || 'test' }}
-          TELEGRAM_BOT_TOKEN:    ${{ secrets.TELEGRAM_BOT_TOKEN }}
-          TELEGRAM_CHAT_ID:      ${{ secrets.TELEGRAM_CHAT_ID }}
-          FLIGHTMON_REPO_ROOT:   ${{ github.workspace }}
+          TELEGRAM_BOT_TOKEN:  ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID:    ${{ secrets.TELEGRAM_CHAT_ID }}
+          FLIGHTMON_REPO_ROOT: ${{ github.workspace }}
         run: uv run python -m flightmon run
 
       - name: Commit data updates

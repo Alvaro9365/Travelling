@@ -12,7 +12,7 @@ from pathlib import Path
 
 from .config import Config, ConfigError
 from .notifier.telegram import TelegramNotifier
-from .providers.amadeus import AmadeusProvider
+from .providers.fastflights import FastFlightsProvider
 from .search.runner import run_all, run_search
 from .storage.jsonfile import JsonFileStore, build_dashboard, _atomic_write_json
 from .summary import RunSummary, SearchRunSummary, to_markdown, to_oneline
@@ -38,7 +38,7 @@ def main(argv: list[str] | None = None) -> int:
         print(f"Config error: {exc}", file=sys.stderr)
         return 2
 
-    provider = AmadeusProvider(cfg.amadeus_client_id, cfg.amadeus_client_secret, cfg.amadeus_hostname)
+    provider = FastFlightsProvider()
     store = JsonFileStore(cfg.data_dir)
     notifier = (
         TelegramNotifier(cfg.telegram_bot_token, cfg.telegram_chat_id, store)

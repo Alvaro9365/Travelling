@@ -1,10 +1,14 @@
 # Lista de búsquedas que el cron evalúa cada 2 h.
 # Edita este fichero, haz commit y push: la próxima ejecución del cron lo recoge.
 #
+# Proveedor: Google Flights vía la librería `fast-flights` (gratis, datos reales
+# en vivo, sin credenciales). Cada búsqueda muestrea por defecto 2 fechas de
+# salida × 2 duraciones por destino.
+#
 # Modos de destino:
-#   any      → cualquier destino (Amadeus Flight Inspiration)
-#   include  → solo los IATAs listados
-#   exclude  → cualquiera menos los listados
+#   include  → solo los IATAs listados (recomendado)
+#   exclude  → cualquiera menos los listados (consulta un pool curado de hubs EU)
+#   any      → cualquier destino del pool curado de hubs EU (~25 ciudades)
 #
 # Cualquier campo opcional se puede omitir; los rangos pueden ser un único valor
 # (e.g. duration_days: {min: 7, max: 7} para duración fija).

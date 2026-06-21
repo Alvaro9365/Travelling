@@ -1,8 +1,10 @@
 # Flight Monitor
 
-Automatización que consulta cada 2 h vuelos en Amadeus para un conjunto
-configurable de búsquedas y publica los resultados en un **dashboard
-estático en GitHub Pages** que se puede consultar en cualquier momento.
+Automatización que consulta cada 2 h vuelos en **Google Flights** (vía la
+librería [`fast-flights`](https://github.com/AWeirdDev/flights), gratuita y
+sin credenciales) para un conjunto configurable de búsquedas y publica
+los resultados en un **dashboard estático en GitHub Pages** que se puede
+consultar en cualquier momento.
 
 Las alertas por Telegram (opcionales) siguen disponibles, pero el origen de
 verdad para consultar gangas y evolución de precios es el dashboard.
@@ -12,7 +14,7 @@ verdad para consultar gangas y evolución de precios es el dashboard.
 │ GitHub Actions cron (cada 2 h)                                      │
 │   └── python -m flightmon run                                       │
 │        ├── lee data/searches.yaml                                   │
-│        ├── consulta Amadeus (inspiration / cheapest-dates)          │
+│        ├── consulta Google Flights (fast-flights, sin credenciales) │
 │        ├── escribe data/results.json + data/history/<id>.jsonl      │
 │        ├── construye data/dashboard.json                            │
 │        ├── (opcional) avisa por Telegram                            │
@@ -29,18 +31,19 @@ verdad para consultar gangas y evolución de precios es el dashboard.
 
 `Settings → Pages → Source → GitHub Actions`.
 
-### 2. Configurar secretos
+### 2. Configurar secretos (opcionales)
 
+`fast-flights` no necesita credenciales: el cron funciona sin tocar
+secretos. Si quieres que además te lleguen alertas a Telegram, añade en
 `Settings → Secrets and variables → Actions → New secret`:
 
 | Secreto | Cómo conseguirlo |
 |---|---|
-| `AMADEUS_CLIENT_ID` / `AMADEUS_CLIENT_SECRET` | https://developers.amadeus.com → My Self-Service Workspace |
 | `TELEGRAM_BOT_TOKEN` *(opcional)* | Bot creado con `@BotFather` |
 | `TELEGRAM_CHAT_ID` *(opcional)* | Tu chat ID via `@userinfobot` |
 
-Sin las dos variables de Telegram el cron sigue funcionando, solo se omiten
-las notificaciones.
+Sin esas dos variables el cron sigue funcionando, solo se omiten las
+notificaciones — el dashboard es la fuente principal.
 
 ### 3. Editar `data/searches.yaml`
 
@@ -62,9 +65,20 @@ searches:
 ```
 
 Modos de destino:
-- `any` → cualquier destino (Amadeus Flight Inspiration). Soporta `price_range.max`.
-- `include` → solo los IATAs listados.
+- `include` → solo los IATAs listados (**recomendado** con fast-flights).
 - `exclude` → cualquiera menos los listados.
+- `any` → muestrea un pool curado de ~25 hubs europeos (LIS, CDG, FCO, AMS,
+  BER, LHR, DUB, OPO, MXP, BCN, VLC, AGP, PMI, ATH, VIE, PRG, BUD, CPH,
+  ARN, OSL, ZRH, BRU, MUC, HEL, NAP). Soporta `price_range.max` para
+  filtrar offers.
+
+Coste de llamadas:
+fast-flights hace 1 query a Google Flights por (destino × fecha muestreada
+× duración muestreada). Por defecto muestrea 2 fechas × 2 duraciones = 4
+queries por destino y run, con throttle de 1 s. Para `mode: include` con 3
+destinos = 12 queries/run ≈ 144/día (asumible). Para `mode: any` con el
+pool por defecto = ~100 queries/run ≈ 1200/día (margen ajustado: si Google
+te empieza a bloquear, baja la cadencia del cron o usa `include`).
 
 ### 4. Lanzar el primer run
 
@@ -77,11 +91,10 @@ Modos de destino:
 ```bash
 cd backend
 uv sync --dev
-uv run pytest               # 30 tests
+uv run pytest               # 40 tests
 
-# Smoke test contra Amadeus test (necesita credenciales):
-AMADEUS_CLIENT_ID=... AMADEUS_CLIENT_SECRET=... \
-  uv run python -m flightmon run
+# Smoke test contra Google Flights (sin credenciales):
+uv run python -m flightmon run
 
 # Servir el dashboard estático con los datos generados:
 python3 -m http.server -d dashboard 8000 &
@@ -107,9 +120,22 @@ Travelling/
     └── flight-monitor.yml     # cron + commit-back + deploy Pages
 ```
 
+## Proveedores alternativos
+
+`FlightProvider` (`backend/flightmon/providers/base.py`) es una interfaz
+abstracta. Hoy hay dos implementaciones disponibles:
+
+- `fastflights.py` — **default**, Google Flights, gratis.
+- `amadeus.py` — Amadeus Self-Service (necesita credenciales y, para
+  datos reales, suscripción de pago). Se queda en el repo como fallback
+  si Google rompe la API interna.
+
+Para forzar Amadeus, modifica `cli.py` para instanciar `AmadeusProvider`
+en vez de `FastFlightsProvider` y añade los secretos `AMADEUS_CLIENT_ID`,
+`AMADEUS_CLIENT_SECRET`, `AMADEUS_HOSTNAME` (`test` o `production`).
+
 ## Roadmap
 
 - Múltiples búsquedas en `searches.yaml` (ya soportado, solo añadir entradas).
-- Enriquecer con `/v2/shopping/flight-offers` para tener `airline`, `stops`, `duration` reales.
-- Vistas de "alojamiento sugerido" y "rutas en destino" cuando llegue ese trabajo
-  (la interfaz `FlightProvider` deja preparada la extensión a otros providers).
+- Selector de provider por búsqueda en el YAML (cuando se necesite hibridar).
+- Vistas de "alojamiento sugerido" y "rutas en destino" cuando llegue ese trabajo.
