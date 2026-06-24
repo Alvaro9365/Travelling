@@ -1,10 +1,10 @@
 {
-  "generated_at": "2026-06-24T10:45:29Z",
+  "generated_at": "2026-06-24T14:22:36Z",
   "totals": {
     "searches": 1,
     "active_searches": 1,
-    "offers": 5,
-    "deals": 5
+    "offers": 1,
+    "deals": 1
   },
   "deals": [
     {
@@ -12,65 +12,13 @@
       "search_name": "Escapada — Lisboa, París o Roma",
       "reason": "≤ umbral",
       "origin_iata": "MAD",
-      "destination_iata": "LIS",
-      "departure_date": "2026-09-05",
-      "return_date": "2026-09-10",
-      "price_eur": 72.0,
-      "airline": "Tap Air Portugal",
-      "stops": 0,
-      "duration_minutes": 85
-    },
-    {
-      "search_id": "ejemplo-lisboa-paris-roma",
-      "search_name": "Escapada — Lisboa, París o Roma",
-      "reason": "≤ umbral",
-      "origin_iata": "MAD",
-      "destination_iata": "LIS",
-      "departure_date": "2026-09-20",
-      "return_date": "2026-09-25",
-      "price_eur": 103.0,
-      "airline": "easyJet",
-      "stops": 0,
-      "duration_minutes": 85
-    },
-    {
-      "search_id": "ejemplo-lisboa-paris-roma",
-      "search_name": "Escapada — Lisboa, París o Roma",
-      "reason": "≤ umbral",
-      "origin_iata": "MAD",
-      "destination_iata": "LIS",
-      "departure_date": "2026-09-05",
-      "return_date": "2026-09-13",
-      "price_eur": 111.0,
-      "airline": "Tap Air Portugal",
-      "stops": 0,
-      "duration_minutes": 85
-    },
-    {
-      "search_id": "ejemplo-lisboa-paris-roma",
-      "search_name": "Escapada — Lisboa, París o Roma",
-      "reason": "≤ umbral",
-      "origin_iata": "MAD",
-      "destination_iata": "FCO",
-      "departure_date": "2026-09-20",
-      "return_date": "2026-09-25",
-      "price_eur": 121.0,
-      "airline": "Ryanair",
-      "stops": 0,
-      "duration_minutes": 145
-    },
-    {
-      "search_id": "ejemplo-lisboa-paris-roma",
-      "search_name": "Escapada — Lisboa, París o Roma",
-      "reason": "≤ umbral",
-      "origin_iata": "MAD",
-      "destination_iata": "FCO",
-      "departure_date": "2026-09-20",
-      "return_date": "2026-09-28",
-      "price_eur": 137.0,
-      "airline": "Ryanair",
-      "stops": 0,
-      "duration_minutes": 145
+      "destination_iata": "ROM",
+      "departure_date": "2026-09-10",
+      "return_date": "2026-09-15",
+      "price_eur": 61.0,
+      "airline": "W4",
+      "duration_minutes": 150,
+      "deep_link": "https://www.aviasales.com/search/MAD1009ROM15091"
     }
   ],
   "searches": [
@@ -87,73 +35,62 @@
         "price_max": 250.0,
         "price_under_alert": 180.0
       },
-      "captured_at": "2026-06-21T08:26:51Z",
+      "captured_at": "2026-06-24T14:22:36Z",
       "offers": [
         {
           "origin_iata": "MAD",
-          "destination_iata": "LIS",
-          "departure_date": "2026-09-05",
-          "return_date": "2026-09-10",
-          "price_eur": 72.0,
-          "airline": "Tap Air Portugal",
-          "stops": 0,
-          "duration_minutes": 85
-        },
-        {
-          "origin_iata": "MAD",
-          "destination_iata": "LIS",
-          "departure_date": "2026-09-20",
-          "return_date": "2026-09-25",
-          "price_eur": 103.0,
-          "airline": "easyJet",
-          "stops": 0,
-          "duration_minutes": 85
-        },
-        {
-          "origin_iata": "MAD",
-          "destination_iata": "LIS",
-          "departure_date": "2026-09-05",
-          "return_date": "2026-09-13",
-          "price_eur": 111.0,
-          "airline": "Tap Air Portugal",
-          "stops": 0,
-          "duration_minutes": 85
-        },
-        {
-          "origin_iata": "MAD",
-          "destination_iata": "FCO",
-          "departure_date": "2026-09-20",
-          "return_date": "2026-09-25",
-          "price_eur": 121.0,
-          "airline": "Ryanair",
-          "stops": 0,
-          "duration_minutes": 145
-        },
-        {
-          "origin_iata": "MAD",
-          "destination_iata": "FCO",
-          "departure_date": "2026-09-20",
-          "return_date": "2026-09-28",
-          "price_eur": 137.0,
-          "airline": "Ryanair",
-          "stops": 0,
-          "duration_minutes": 145
+          "destination_iata": "ROM",
+          "departure_date": "2026-09-10",
+          "return_date": "2026-09-15",
+          "price_eur": 61.0,
+          "airline": "W4",
+          "duration_minutes": 150,
+          "deep_link": "https://www.aviasales.com/search/MAD1009ROM15091"
         }
       ],
       "history": [
         {
           "day": "2026-06-21",
           "min_price": 72.0
+        },
+        {
+          "day": "2026-06-24",
+          "min_price": 61.0
         }
       ],
       "stats": {
-        "min_seen": 72.0,
-        "last_min": 72.0,
-        "offers_count": 5
+        "min_seen": 61.0,
+        "last_min": 61.0,
+        "offers_count": 1
       }
     }
   ],
   "recent_runs": [
+    {
+      "started_at": "2026-06-24T14:22:36Z",
+      "finished_at": "2026-06-24T14:22:36Z",
+      "duration_seconds": 0.5,
+      "totals": {
+        "searches": 1,
+        "offers_returned": 1,
+        "offers_kept": 1,
+        "notifications": 0,
+        "provider_errors": 0,
+        "failed_searches": 0
+      },
+      "searches": [
+        {
+          "search_id": "ejemplo-lisboa-paris-roma",
+          "search_name": "Escapada — Lisboa, París o Roma",
+          "offers_returned": 1,
+          "offers_kept": 1,
+          "provider_errors": 0,
+          "notifications_fired": 0,
+          "min_price": 61.0,
+          "error": null
+        }
+      ]
+    },
     {
       "started_at": "2026-06-24T10:45:29Z",
       "finished_at": "2026-06-24T10:45:29Z",
