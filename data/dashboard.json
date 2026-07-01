@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-07-01T03:26:55Z",
+  "generated_at": "2026-07-01T08:08:08Z",
   "totals": {
     "searches": 1,
     "active_searches": 1,
@@ -35,7 +35,7 @@
         "price_max": 250.0,
         "price_under_alert": 180.0
       },
-      "captured_at": "2026-07-01T03:26:55Z",
+      "captured_at": "2026-07-01T08:08:08Z",
       "offers": [
         {
           "origin_iata": "MAD",
@@ -94,6 +94,31 @@
     }
   ],
   "recent_runs": [
+    {
+      "started_at": "2026-07-01T08:08:07Z",
+      "finished_at": "2026-07-01T08:08:08Z",
+      "duration_seconds": 0.7,
+      "totals": {
+        "searches": 1,
+        "offers_returned": 1,
+        "offers_kept": 1,
+        "notifications": 0,
+        "provider_errors": 0,
+        "failed_searches": 0
+      },
+      "searches": [
+        {
+          "search_id": "ejemplo-lisboa-paris-roma",
+          "search_name": "Escapada — Lisboa, París o Roma",
+          "offers_returned": 1,
+          "offers_kept": 1,
+          "provider_errors": 0,
+          "notifications_fired": 0,
+          "min_price": 60.0,
+          "error": null
+        }
+      ]
+    },
     {
       "started_at": "2026-07-01T03:26:54Z",
       "finished_at": "2026-07-01T03:26:55Z",
@@ -798,31 +823,6 @@
       "started_at": "2026-06-27T15:13:21Z",
       "finished_at": "2026-06-27T15:13:21Z",
       "duration_seconds": 0.3,
-      "totals": {
-        "searches": 1,
-        "offers_returned": 1,
-        "offers_kept": 1,
-        "notifications": 0,
-        "provider_errors": 0,
-        "failed_searches": 0
-      },
-      "searches": [
-        {
-          "search_id": "ejemplo-lisboa-paris-roma",
-          "search_name": "Escapada — Lisboa, París o Roma",
-          "offers_returned": 1,
-          "offers_kept": 1,
-          "provider_errors": 0,
-          "notifications_fired": 0,
-          "min_price": 60.0,
-          "error": null
-        }
-      ]
-    },
-    {
-      "started_at": "2026-06-27T13:24:33Z",
-      "finished_at": "2026-06-27T13:24:34Z",
-      "duration_seconds": 0.4,
       "totals": {
         "searches": 1,
         "offers_returned": 1,
