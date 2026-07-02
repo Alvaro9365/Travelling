@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-07-01T23:10:43Z",
+  "generated_at": "2026-07-02T02:52:22Z",
   "totals": {
     "searches": 1,
     "active_searches": 1,
@@ -35,7 +35,7 @@
         "price_max": 250.0,
         "price_under_alert": 180.0
       },
-      "captured_at": "2026-07-01T23:10:43Z",
+      "captured_at": "2026-07-02T02:52:22Z",
       "offers": [
         {
           "origin_iata": "MAD",
@@ -84,6 +84,10 @@
         {
           "day": "2026-07-01",
           "min_price": 60.0
+        },
+        {
+          "day": "2026-07-02",
+          "min_price": 60.0
         }
       ],
       "stats": {
@@ -94,6 +98,31 @@
     }
   ],
   "recent_runs": [
+    {
+      "started_at": "2026-07-02T02:52:22Z",
+      "finished_at": "2026-07-02T02:52:22Z",
+      "duration_seconds": 0.3,
+      "totals": {
+        "searches": 1,
+        "offers_returned": 1,
+        "offers_kept": 1,
+        "notifications": 0,
+        "provider_errors": 0,
+        "failed_searches": 0
+      },
+      "searches": [
+        {
+          "search_id": "ejemplo-lisboa-paris-roma",
+          "search_name": "Escapada — Lisboa, París o Roma",
+          "offers_returned": 1,
+          "offers_kept": 1,
+          "provider_errors": 0,
+          "notifications_fired": 0,
+          "min_price": 60.0,
+          "error": null
+        }
+      ]
+    },
     {
       "started_at": "2026-07-01T23:10:42Z",
       "finished_at": "2026-07-01T23:10:43Z",
@@ -798,31 +827,6 @@
       "started_at": "2026-06-28T07:47:31Z",
       "finished_at": "2026-06-28T07:47:31Z",
       "duration_seconds": 0.4,
-      "totals": {
-        "searches": 1,
-        "offers_returned": 1,
-        "offers_kept": 1,
-        "notifications": 0,
-        "provider_errors": 0,
-        "failed_searches": 0
-      },
-      "searches": [
-        {
-          "search_id": "ejemplo-lisboa-paris-roma",
-          "search_name": "Escapada — Lisboa, París o Roma",
-          "offers_returned": 1,
-          "offers_kept": 1,
-          "provider_errors": 0,
-          "notifications_fired": 0,
-          "min_price": 60.0,
-          "error": null
-        }
-      ]
-    },
-    {
-      "started_at": "2026-06-28T03:26:41Z",
-      "finished_at": "2026-06-28T03:26:41Z",
-      "duration_seconds": 0.7,
       "totals": {
         "searches": 1,
         "offers_returned": 1,
