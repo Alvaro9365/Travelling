@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-07-06T13:41:31Z",
+  "generated_at": "2026-07-06T16:50:11Z",
   "totals": {
     "searches": 1,
     "active_searches": 1,
@@ -35,7 +35,7 @@
         "price_max": 250.0,
         "price_under_alert": 180.0
       },
-      "captured_at": "2026-07-06T13:41:31Z",
+      "captured_at": "2026-07-06T16:50:11Z",
       "offers": [
         {
           "origin_iata": "MAD",
@@ -110,6 +110,31 @@
     }
   ],
   "recent_runs": [
+    {
+      "started_at": "2026-07-06T16:50:10Z",
+      "finished_at": "2026-07-06T16:50:11Z",
+      "duration_seconds": 0.7,
+      "totals": {
+        "searches": 1,
+        "offers_returned": 1,
+        "offers_kept": 1,
+        "notifications": 0,
+        "provider_errors": 0,
+        "failed_searches": 0
+      },
+      "searches": [
+        {
+          "search_id": "ejemplo-lisboa-paris-roma",
+          "search_name": "Escapada — Lisboa, París o Roma",
+          "offers_returned": 1,
+          "offers_kept": 1,
+          "provider_errors": 0,
+          "notifications_fired": 0,
+          "min_price": 141.0,
+          "error": null
+        }
+      ]
+    },
     {
       "started_at": "2026-07-06T13:41:30Z",
       "finished_at": "2026-07-06T13:41:31Z",
@@ -813,31 +838,6 @@
     {
       "started_at": "2026-07-03T06:58:24Z",
       "finished_at": "2026-07-03T06:58:25Z",
-      "duration_seconds": 0.5,
-      "totals": {
-        "searches": 1,
-        "offers_returned": 0,
-        "offers_kept": 0,
-        "notifications": 0,
-        "provider_errors": 0,
-        "failed_searches": 0
-      },
-      "searches": [
-        {
-          "search_id": "ejemplo-lisboa-paris-roma",
-          "search_name": "Escapada — Lisboa, París o Roma",
-          "offers_returned": 0,
-          "offers_kept": 0,
-          "provider_errors": 0,
-          "notifications_fired": 0,
-          "min_price": null,
-          "error": null
-        }
-      ]
-    },
-    {
-      "started_at": "2026-07-03T02:35:42Z",
-      "finished_at": "2026-07-03T02:35:42Z",
       "duration_seconds": 0.5,
       "totals": {
         "searches": 1,
