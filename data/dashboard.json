@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-07-23T15:52:27Z",
+  "generated_at": "2026-07-23T17:16:42Z",
   "totals": {
     "searches": 1,
     "active_searches": 1,
@@ -146,6 +146,31 @@
     }
   ],
   "recent_runs": [
+    {
+      "started_at": "2026-07-23T17:16:42Z",
+      "finished_at": "2026-07-23T17:16:42Z",
+      "duration_seconds": 0.3,
+      "totals": {
+        "searches": 1,
+        "offers_returned": 0,
+        "offers_kept": 0,
+        "notifications": 0,
+        "provider_errors": 0,
+        "failed_searches": 0
+      },
+      "searches": [
+        {
+          "search_id": "ejemplo-lisboa-paris-roma",
+          "search_name": "Escapada — Lisboa, París o Roma",
+          "offers_returned": 0,
+          "offers_kept": 0,
+          "provider_errors": 0,
+          "notifications_fired": 0,
+          "min_price": null,
+          "error": null
+        }
+      ]
+    },
     {
       "started_at": "2026-07-23T15:52:27Z",
       "finished_at": "2026-07-23T15:52:27Z",
@@ -867,31 +892,6 @@
           "provider_errors": 0,
           "notifications_fired": 0,
           "min_price": 138.0,
-          "error": null
-        }
-      ]
-    },
-    {
-      "started_at": "2026-07-20T10:47:54Z",
-      "finished_at": "2026-07-20T10:47:55Z",
-      "duration_seconds": 0.8,
-      "totals": {
-        "searches": 1,
-        "offers_returned": 1,
-        "offers_kept": 1,
-        "notifications": 0,
-        "provider_errors": 0,
-        "failed_searches": 0
-      },
-      "searches": [
-        {
-          "search_id": "ejemplo-lisboa-paris-roma",
-          "search_name": "Escapada — Lisboa, París o Roma",
-          "offers_returned": 1,
-          "offers_kept": 1,
-          "provider_errors": 0,
-          "notifications_fired": 0,
-          "min_price": 137.0,
           "error": null
         }
       ]
