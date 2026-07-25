@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-07-25T14:59:00Z",
+  "generated_at": "2026-07-25T16:52:42Z",
   "totals": {
     "searches": 1,
     "active_searches": 1,
@@ -14,11 +14,11 @@
       "origin_iata": "MAD",
       "destination_iata": "PAR",
       "departure_date": "2026-09-05",
-      "return_date": "2026-09-12",
-      "price_eur": 93.0,
+      "return_date": "2026-09-11",
+      "price_eur": 115.0,
       "airline": "IB",
       "duration_minutes": 125,
-      "deep_link": "https://www.aviasales.com/search/MAD0509PAR12091"
+      "deep_link": "https://www.aviasales.com/search/MAD0509PAR11091"
     }
   ],
   "searches": [
@@ -35,17 +35,17 @@
         "price_max": 250.0,
         "price_under_alert": 180.0
       },
-      "captured_at": "2026-07-25T14:59:00Z",
+      "captured_at": "2026-07-25T16:52:42Z",
       "offers": [
         {
           "origin_iata": "MAD",
           "destination_iata": "PAR",
           "departure_date": "2026-09-05",
-          "return_date": "2026-09-12",
-          "price_eur": 93.0,
+          "return_date": "2026-09-11",
+          "price_eur": 115.0,
           "airline": "IB",
           "duration_minutes": 125,
-          "deep_link": "https://www.aviasales.com/search/MAD0509PAR12091"
+          "deep_link": "https://www.aviasales.com/search/MAD0509PAR11091"
         }
       ],
       "history": [
@@ -148,12 +148,37 @@
       ],
       "stats": {
         "min_seen": 60.0,
-        "last_min": 93.0,
+        "last_min": 115.0,
         "offers_count": 1
       }
     }
   ],
   "recent_runs": [
+    {
+      "started_at": "2026-07-25T16:52:41Z",
+      "finished_at": "2026-07-25T16:52:42Z",
+      "duration_seconds": 0.8,
+      "totals": {
+        "searches": 1,
+        "offers_returned": 1,
+        "offers_kept": 1,
+        "notifications": 0,
+        "provider_errors": 0,
+        "failed_searches": 0
+      },
+      "searches": [
+        {
+          "search_id": "ejemplo-lisboa-paris-roma",
+          "search_name": "Escapada — Lisboa, París o Roma",
+          "offers_returned": 1,
+          "offers_kept": 1,
+          "provider_errors": 0,
+          "notifications_fired": 0,
+          "min_price": 115.0,
+          "error": null
+        }
+      ]
+    },
     {
       "started_at": "2026-07-25T14:59:00Z",
       "finished_at": "2026-07-25T14:59:00Z",
@@ -875,31 +900,6 @@
           "provider_errors": 0,
           "notifications_fired": 0,
           "min_price": 131.0,
-          "error": null
-        }
-      ]
-    },
-    {
-      "started_at": "2026-07-22T13:42:02Z",
-      "finished_at": "2026-07-22T13:42:03Z",
-      "duration_seconds": 0.8,
-      "totals": {
-        "searches": 1,
-        "offers_returned": 1,
-        "offers_kept": 1,
-        "notifications": 0,
-        "provider_errors": 0,
-        "failed_searches": 0
-      },
-      "searches": [
-        {
-          "search_id": "ejemplo-lisboa-paris-roma",
-          "search_name": "Escapada — Lisboa, París o Roma",
-          "offers_returned": 1,
-          "offers_kept": 1,
-          "provider_errors": 0,
-          "notifications_fired": 0,
-          "min_price": 132.0,
           "error": null
         }
       ]
