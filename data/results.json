@@ -1,15 +1,15 @@
 {
   "ejemplo-lisboa-paris-roma": {
-    "captured_at": "2026-08-03T11:18:06Z",
+    "captured_at": "2026-08-06T13:56:29Z",
     "offers": [
       {
         "origin_iata": "MAD",
         "destination_iata": "PAR",
         "departure_date": "2026-09-12",
         "return_date": "2026-09-17",
-        "price_eur": 121.0,
-        "airline": "AF",
-        "duration_minutes": 125,
+        "price_eur": 113.0,
+        "airline": "MW",
+        "duration_minutes": 225,
         "deep_link": "https://www.aviasales.com/search/MAD1209PAR17091"
       }
     ]
